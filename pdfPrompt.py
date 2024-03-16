@@ -1,42 +1,18 @@
 from pdfProcessing import process_pdf
 #Creates prompt to feed llama2
+
 def retrieve_documents(pdf, search_type, search_kwargs):
-    """
-    Searches through the Vector DB and retrieves documents based on search types.
-
-    Parameters:
-    - pdf (str): Path to the PDF file.
-    - search_type (str): Type of search (e.g., "similarity").
-    - search_kwargs (dict): Search arguments used to retrieve a specific number of documents.
-
-    Returns:
-    - Retriever: Retriever object for retrieving documents.
-    """
+    #stores all embeddings
     vector_store = process_pdf(pdf)
+    #using the question, the key words are used to retrieve relivent data.
     return vector_store.as_retriever(search_type=search_type, search_kwargs=search_kwargs)
 
 def format_documents(pages):
-    """
-    Formats a list of document pages into a single string.
-
-    Parameters:
-    - pages (list): List of document pages.
-
-    Returns:
-    - str: Formatted string containing document content.
-    """
+    #concatinates reletvant data
     return "\n\n".join(page.page_content for page in pages)
 
 def make_prompt(pdf, question):
-    """
-    Creates a prompt for a question-answering task.
-
-    Parameters:
-    - pdf (str): Path to the PDF file.
-
-    Returns:
-    - str: Prompt for question-answering with context.
-    """
+    #makes custom prompt
     question = question
     retriever_instance = retrieve_documents(pdf, "similarity", {"k": 6})
     retrieved_docs = retriever_instance.invoke(question)

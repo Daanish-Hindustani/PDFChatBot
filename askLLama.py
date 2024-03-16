@@ -4,9 +4,12 @@ from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 from pdfPrompt import make_prompt
 
 def askllama(pdf, question):
+    #Retrives prompt
     prompt = make_prompt(pdf, question)
+    #Feeds ollama the prompt
     llm = Ollama(model="llama2:latest", 
              callback_manager=CallbackManager([StreamingStdOutCallbackHandler()]))
+    #gets response from Llama
     return f"ChatBot: {llm.invoke(prompt)}"
     
 
